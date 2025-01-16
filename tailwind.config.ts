@@ -55,6 +55,41 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		animation: {
+  			shine: 'shine var(--duration) infinite linear',
+  			'background-gradient': 'background-gradient var(--background-gradient-speed, 15s) cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite'
+  		},
+  		keyframes: {
+  			shine: {
+  				'0%': {
+  					'background-position': '0% 0%'
+  				},
+  				'50%': {
+  					'background-position': '100% 100%'
+  				},
+  				to: {
+  					'background-position': '0% 0%'
+  				}
+  			},
+  			'background-gradient': {
+  				'0%, 100%': {
+  					transform: 'translate(0, 0)',
+  					animationDelay: 'var(--background-gradient-delay, 0s)'
+  				},
+  				'20%': {
+  					transform: 'translate(calc(100% * var(--tx-1, 1)), calc(100% * var(--ty-1, 1)))'
+  				},
+  				'40%': {
+  					transform: 'translate(calc(100% * var(--tx-2, -1)), calc(100% * var(--ty-2, 1)))'
+  				},
+  				'60%': {
+  					transform: 'translate(calc(100% * var(--tx-3, 1)), calc(100% * var(--ty-3, -1)))'
+  				},
+  				'80%': {
+  					transform: 'translate(calc(100% * var(--tx-4, -1)), calc(100% * var(--ty-4, -1)))'
+  				}
+  			}
   		}
   	}
   },
