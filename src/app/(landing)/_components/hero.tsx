@@ -82,24 +82,23 @@ const Hero: React.FC = () => {
           />
         </div>
         <BentoCard
-          title="New Users"
-          value={1234}
-          subtitle="Daily signups"
+          title="New Repos Integrated"
+          value={134}
+          subtitle="Daily integrations"
           colors={["#60A5FA", "#34D399", "#93C5FD"]}
           delay={0.4}
         />
         <BentoCard
-          title="Conversion Rate"
-          value="3.45%"
+          title="Accuracy Rate"
+          value="98.45%"
           subtitle="0.5% increase from last week"
           colors={["#F59E0B", "#A78BFA", "#FCD34D"]}
           delay={0.6}
         />
         <div className="md:col-span-2">
           <BentoCard
-            title="Active Projects"
+            title="Total Active Projects"
             value={42}
-            subtitle="8 completed this month"
             colors={["#3B82F6", "#A78BFA", "#FBCFE8"]}
             delay={0.8}
           />
@@ -108,7 +107,7 @@ const Hero: React.FC = () => {
           <BentoCard
             title="Customer Satisfaction"
             value="4.8/5"
-            subtitle="Based on 1,000+ reviews from verified customers across all product categories"
+            subtitle="Based on 1,000+ reviews from verified customers"
             colors={["#EC4899", "#F472B6", "#3B82F6"]}
             delay={1}
           />
