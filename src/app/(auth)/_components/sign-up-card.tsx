@@ -4,7 +4,7 @@ import { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import {
   Card,
@@ -16,6 +16,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { EyeToggleIcon } from "@/components/icons/eye-icon";
+import { authClient } from "@/lib/auth";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z
@@ -33,39 +36,59 @@ const formSchema = z.object({
     .email({ message: "Please enter a valid email" }),
   password: z
     .string({ message: "Please enter a valid password" })
-    .max(50, { message: "Password must be less than 50 characters" }),
+    .max(50, { message: "Password must be less than 50 characters" })
+    .min(8, { message: "Password too short" }),
+  name: z
+    .string()
+    .min(3, { message: "The name should be atleast 3 characters long" })
+    .max(50, { message: "Provided name is too long" }),
 });
-type formValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
-export function LoginCard() {
+export function SignUpCard() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
-  const form = useForm<formValues>({
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
 
-  function onSubmit(values: formValues) {
-    console.log(values);
+  function onSubmit(values: FormValues) {
+    startTransition(async () => {
+      const { error } = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      });
+
+      if (error) {
+        toast.error(error.message);
+      }
+    });
   }
 
   return (
     <Card className="border-none shadow-none w-[600px]">
       <CardHeader>
-        <CardTitle className="text-3xl">Hey, welcome back</CardTitle>
+        <CardTitle className="text-3xl">
+          Hey, thanks for considering us
+        </CardTitle>
         <CardDescription>
-          Please enter your credentials to access your account.
+          By making an account you accept our terms and services
           <br />
-          Don&apos;t have an account?
+          Already have an account?
           <Link
             className="text-primary underline font-semibold ml-1"
-            href="/sign-up"
+            href="/login"
           >
-            SignUp
+            Login
           </Link>
         </CardDescription>
       </CardHeader>
@@ -73,6 +96,23 @@ export function LoginCard() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="gojo staraou" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription>
+                    This will be your display name
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="email"
@@ -121,7 +161,11 @@ export function LoginCard() {
               )}
             />
 
-            <InteractiveHoverButton type="submit" className="rounded-md">
+            <InteractiveHoverButton
+              disabled={isPending}
+              type="submit"
+              className="rounded-md"
+            >
               Submit
             </InteractiveHoverButton>
           </form>

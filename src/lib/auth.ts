@@ -5,14 +5,18 @@ import { nextCookies } from "better-auth/next-js";
 
 import { BASE_URL } from "./constants";
 import db from "@/db";
+import { schema } from "@/db/schema";
 
 const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "sqlite",
+    schema,
   }),
+
   emailAndPassword: {
     enabled: true,
   },
+
   plugins: [nextCookies()],
 });
 

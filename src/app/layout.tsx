@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Asap } from "next/font/google";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 
@@ -19,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${font.className} px-4  antialiased`}>{children}</body>
+      <body className={`${font.className} px-4  antialiased`}>
+        {children}
+        <Toaster closeButton position="top-right" />
+      </body>
     </html>
   );
 }
