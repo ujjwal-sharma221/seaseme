@@ -4,7 +4,8 @@ import { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 import {
   Card,
@@ -24,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { EyeToggleIcon } from "@/components/icons/eye-icon";
+import { authClient } from "@/lib/auth";
+import { LoaderCircle } from "lucide-react";
 
 const formSchema = z.object({
   email: z
@@ -41,6 +44,8 @@ export function LoginCard() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<formValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +55,23 @@ export function LoginCard() {
   });
 
   function onSubmit(values: formValues) {
-    console.log(values);
+    startTransition(async () => {
+      await authClient.signIn.email(
+        {
+          email: values.email,
+          password: values.password,
+        },
+        {
+          onError: (ctx) => {
+            toast.error(ctx.error.message);
+          },
+          onSuccess: (ctx) => {
+            toast.success("welcome back");
+            console.log(ctx);
+          },
+        },
+      );
+    });
   }
 
   return (
@@ -121,9 +142,17 @@ export function LoginCard() {
               )}
             />
 
-            <InteractiveHoverButton type="submit" className="rounded-md">
-              Submit
-            </InteractiveHoverButton>
+            {isPending ? (
+              <LoaderCircle className="animate-spin size-5 text-muted-foreground ml-4" />
+            ) : (
+              <InteractiveHoverButton
+                disabled={isPending}
+                type="submit"
+                className="rounded-md"
+              >
+                Submit
+              </InteractiveHoverButton>
+            )}
           </form>
         </Form>
       </CardContent>

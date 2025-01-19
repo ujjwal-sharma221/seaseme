@@ -1,6 +1,6 @@
 import { Wrapper } from "./_components/wrapper";
 
-const LandingPage = () => {
+const LandingPage = async () => {
   return (
     <div>
       <Wrapper />

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
 
 import {
   Card,
@@ -26,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { EyeToggleIcon } from "@/components/icons/eye-icon";
 import { authClient } from "@/lib/auth";
-import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z
@@ -43,7 +44,7 @@ const formSchema = z.object({
     .min(3, { message: "The name should be atleast 3 characters long" })
     .max(50, { message: "Provided name is too long" }),
 });
-export type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
 export function SignUpCard() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -62,15 +63,18 @@ export function SignUpCard() {
 
   function onSubmit(values: FormValues) {
     startTransition(async () => {
-      const { error } = await authClient.signUp.email({
-        email: values.email,
-        password: values.password,
-        name: values.name,
-      });
-
-      if (error) {
-        toast.error(error.message);
-      }
+      await authClient.signUp.email(
+        {
+          email: values.email,
+          password: values.password,
+          name: values.name,
+        },
+        {
+          onError: (ctx) => {
+            toast.error(ctx.error.message);
+          },
+        },
+      );
     });
   }
 
@@ -161,13 +165,17 @@ export function SignUpCard() {
               )}
             />
 
-            <InteractiveHoverButton
-              disabled={isPending}
-              type="submit"
-              className="rounded-md"
-            >
-              Submit
-            </InteractiveHoverButton>
+            {isPending ? (
+              <LoaderCircle className="animate-spin size-5 text-muted-foreground ml-4" />
+            ) : (
+              <InteractiveHoverButton
+                disabled={isPending}
+                type="submit"
+                className="rounded-md"
+              >
+                Submit
+              </InteractiveHoverButton>
+            )}
           </form>
         </Form>
       </CardContent>

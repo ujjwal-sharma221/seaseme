@@ -1,8 +1,15 @@
+import { headers } from "next/headers";
+
+import auth from "@/lib/auth";
 import { AuthTitles } from "./auth-title";
 import { Hero } from "./hero";
 import { Title } from "./title";
 
-export function Wrapper() {
+export async function Wrapper() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <div className="min-h-screen  p-6">
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 auto-rows-auto ">
