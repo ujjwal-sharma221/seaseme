@@ -122,7 +122,7 @@ const VerticalCutReveal = forwardRef<VerticalCutRevealRef, TextProps>(
         }
         return Math.abs(staggerFrom - index) * staggerDuration;
       },
-      [elements.length, staggerFrom, staggerDuration],
+      [staggerFrom, staggerDuration, elements, splitBy],
     );
 
     const startAnimation = useCallback(() => {

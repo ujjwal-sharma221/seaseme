@@ -4,11 +4,14 @@ import auth from "@/lib/auth";
 import { AuthTitles } from "./auth-title";
 import { Hero } from "./hero";
 import { Title } from "./title";
+import { redirect } from "next/navigation";
 
 export async function Wrapper() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  if (session) redirect("/main");
 
   return (
     <div className="min-h-screen  p-6">
