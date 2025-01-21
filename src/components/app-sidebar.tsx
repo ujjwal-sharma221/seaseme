@@ -1,13 +1,18 @@
+import { Plus } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
-  // SidebarFooter,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Meteors } from "./ui/meteors";
+import { UserButton } from "./user-button";
+import { TextScramble } from "./ui/text-scramble";
+import { Button } from "./ui/button";
 
 export function AppSidebar() {
   return (
@@ -23,14 +28,28 @@ export function AppSidebar() {
 
       <SidebarContent className="bg-white">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-lg ">Projects</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-lg">
+            <TextScramble className=" uppercase">Projects</TextScramble>
+          </SidebarGroupLabel>
           <SidebarGroupContent className="text-black">
             <div>dfsasd</div>
             <div>dfsasd</div>
             <div>dfsasd</div>
           </SidebarGroupContent>
         </SidebarGroup>
+        <Button className="group m-1" variant="secondary">
+          <Plus
+            className="-ms-1 me-2 opacity-60"
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+          New Project
+        </Button>
       </SidebarContent>
+      <SidebarFooter className="bg-white">
+        <UserButton />
+      </SidebarFooter>
     </Sidebar>
   );
 }
