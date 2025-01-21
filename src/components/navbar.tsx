@@ -10,6 +10,7 @@ import { ChartColumnDecreasingIcon } from "./icons/chart-column-decreasing";
 import { CircleDollarSignIcon } from "./icons/circle-dollar-sign";
 import { HomeIcon } from "./icons/home";
 import { cn } from "@/lib/utils";
+import { SidebarTrigger } from "./ui/sidebar";
 
 const NAV_ITEMS = [
   { Icon: HomeIcon, href: "/main", title: "Home" },
@@ -22,8 +23,8 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center justify-between">
-      <div></div>
+    <nav className="flex items-center justify-between ">
+      <SidebarTrigger />
       <motion.div className="flex gap-4" layout>
         <AnimatePresence initial={false}>
           {NAV_ITEMS.map((item) => {
@@ -53,6 +54,7 @@ export function Navbar() {
           })}
         </AnimatePresence>
       </motion.div>
+
       <div></div>
     </nav>
   );
