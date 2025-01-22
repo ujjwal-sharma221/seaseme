@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SidebarProvider defaultOpen>
+    <SidebarProvider>
       <AppSidebar />
       <div className="p-2 w-full">
         <Navbar />

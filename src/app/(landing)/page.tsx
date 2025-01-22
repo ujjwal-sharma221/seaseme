@@ -1,10 +1,6 @@
 import { Wrapper } from "./_components/wrapper";
 
 const LandingPage = async () => {
-  return (
-    <div>
-      <Wrapper />
-    </div>
-  );
+  return <Wrapper />;
 };
 export default LandingPage;

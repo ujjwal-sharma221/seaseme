@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -44,8 +45,29 @@ export const account = sqliteTable("account", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
+export const project = sqliteTable("project", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  githubUrl: text("github_url").notNull(),
+  userId: text("user_id"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const usrRelation = relations(user, ({ many }) => ({
+  projects: many(project),
+}));
+
+export const projectRelations = relations(project, ({ one }) => ({
+  user: one(user, {
+    fields: [project.userId],
+    references: [user.id],
+  }),
+}));
+
 export const schema = {
   user,
   session,
   account,
+  project,
 };

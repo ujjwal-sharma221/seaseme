@@ -15,6 +15,13 @@
       "when": 1737176732281,
       "tag": "0001_powerful_bloodaxe",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1737571742824,
+      "tag": "0002_last_whizzer",
+      "breakpoints": true
     }
   ]
 }

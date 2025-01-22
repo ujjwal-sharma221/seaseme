@@ -13,6 +13,7 @@ import { Meteors } from "./ui/meteors";
 import { UserButton } from "./user-button";
 import { TextScramble } from "./ui/text-scramble";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export function AppSidebar() {
   return (
@@ -37,14 +38,16 @@ export function AppSidebar() {
             <div>dfsasd</div>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Button className="group m-1" variant="secondary">
-          <Plus
-            className="-ms-1 me-2 opacity-60"
-            size={16}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-          New Project
+        <Button className="group m-1" variant="secondary" asChild>
+          <Link href="/new">
+            <Plus
+              className="-ms-1 me-2 opacity-60"
+              size={16}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+            New Project
+          </Link>
         </Button>
       </SidebarContent>
       <SidebarFooter className="bg-white">
