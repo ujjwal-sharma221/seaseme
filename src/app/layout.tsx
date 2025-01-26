@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Asap } from "next/font/google";
 import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${font.className} px-4  antialiased`}>
-        {children}
+        <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster closeButton position="top-right" />
       </body>
     </html>

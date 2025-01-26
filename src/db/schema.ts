@@ -46,10 +46,10 @@ export const account = sqliteTable("account", {
 });
 
 export const project = sqliteTable("project", {
-  id: text("id").primaryKey(),
+  id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   githubUrl: text("github_url").notNull(),
-  userId: text("user_id"),
+  userId: text("user_id").references(() => user.id),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });

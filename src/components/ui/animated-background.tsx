@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import { AnimatePresence, Transition, motion } from "motion/react";
 import {
@@ -85,7 +86,7 @@ export function AnimatedBackground({
           )}
         </AnimatePresence>
         <div className="z-10">{child.props.children}</div>
-      </>,
+      </>
     );
   });
 }
