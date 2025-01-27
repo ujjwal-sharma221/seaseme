@@ -20,7 +20,6 @@ import auth from "@/lib/auth";
 import db from "@/db";
 import { project } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import UnderlineToBackground from "./fancy/underline-to-background";
 
 export async function AppSidebar() {
   const session = await auth.api.getSession({
@@ -56,7 +55,7 @@ export async function AppSidebar() {
             <div className="flex flex-col gap-1">
               {projects.map((project) => (
                 <Link
-                  href={`/projects/${project.id}`}
+                  href={`/project/${project.id}`}
                   className="ml-2 font-semibold text-primary hover:text-muted-foreground truncate"
                   key={project.id}
                 >
