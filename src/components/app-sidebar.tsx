@@ -1,6 +1,9 @@
+"use client";
+
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { headers } from "next/headers";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import {
   Sidebar,
@@ -12,35 +15,39 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Meteors } from "./ui/meteors";
-import { UserButton } from "./user-button";
 import { TextScramble } from "./ui/text-scramble";
 import { Button } from "./ui/button";
-import auth from "@/lib/auth";
+import { fetchProjects } from "@/actions/fetch.projects";
+import { Project } from "@/types/database-types";
+import { TextShimmerWave } from "./ui/text-shimmer-wave";
 
-import db from "@/db";
-import { project } from "@/db/schema";
-import { eq } from "drizzle-orm";
+export function AppSidebar() {
+  const pathname = usePathname();
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [loadingProjects, setLoadingProjects] = useState(false);
 
-export async function AppSidebar() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session) return null;
+  useEffect(() => {
+    const getProjects = async () => {
+      setLoadingProjects(true);
+      try {
+        const fetchedProjects = await fetchProjects();
+        setProjects(fetchedProjects ?? []);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
 
-  const projects = await db
-    .select({
-      name: project.name,
-      id: project.id,
-    })
-    .from(project)
-    .where(eq(project.userId, session.user.id));
+    getProjects();
+  }, []);
 
   return (
     <Sidebar className="" collapsible="offcanvas" variant="floating">
       <SidebarHeader className="bg-white">
-        <div className="relative flex h-[4rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background ">
+        <div className="relative flex h-[4rem] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
           <Meteors number={30} />
-          <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center  font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10 text-3xl">
+          <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10 text-3xl">
             Seaseme
           </span>
         </div>
@@ -49,19 +56,24 @@ export async function AppSidebar() {
       <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarGroupLabel className="text-lg">
-            <TextScramble className=" uppercase">Projects</TextScramble>
+            <TextScramble className="uppercase">Projects</TextScramble>
           </SidebarGroupLabel>
           <SidebarGroupContent className="text-black">
             <div className="flex flex-col gap-1">
-              {projects.map((project) => (
-                <Link
-                  href={`/project/${project.id}`}
-                  className="ml-2 font-semibold text-primary hover:text-muted-foreground truncate"
-                  key={project.id}
-                >
-                  {project.name}
-                </Link>
-              ))}
+              {loadingProjects ? (
+                <div className="animate-pulse ml-4 text-lg">...</div>
+              ) : (
+                projects?.map((project) => (
+                  <div
+                    key={project.id}
+                    className={`group m-1 ${
+                      pathname === `/project/${project.id}` ? "underline" : ""
+                    }`}
+                  >
+                    <Link href={`/project/${project.id}`}>{project.name}</Link>
+                  </div>
+                ))
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -77,9 +89,7 @@ export async function AppSidebar() {
           </Link>
         </Button>
       </SidebarContent>
-      <SidebarFooter className="bg-white">
-        <UserButton />
-      </SidebarFooter>
+      <SidebarFooter className="bg-white">{/* <UserButton /> */}</SidebarFooter>
     </Sidebar>
   );
 }
