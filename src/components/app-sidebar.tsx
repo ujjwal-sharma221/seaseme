@@ -19,7 +19,6 @@ import { TextScramble } from "./ui/text-scramble";
 import { Button } from "./ui/button";
 import { fetchProjects } from "@/actions/fetch.projects";
 import { Project } from "@/types/database-types";
-import { TextShimmerWave } from "./ui/text-shimmer-wave";
 
 export function AppSidebar() {
   const pathname = usePathname();
