@@ -54,14 +54,37 @@ export const project = sqliteTable("project", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
-export const usrRelation = relations(user, ({ many }) => ({
+export const commit = sqliteTable("commit", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  projectId: integer("project_id").references(() => project.id),
+  commitMessage: text("commit_message").notNull(),
+  commitHash: text("commit_hash").notNull(),
+  commitAuthorName: text("commit_author_name").notNull(),
+  commitAuthorAvatar: text("commit_author_avatar").notNull(),
+  commitDate: integer("commit_date", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const userToProjectRelation = relations(user, ({ many }) => ({
   projects: many(project),
 }));
 
-export const projectRelations = relations(project, ({ one }) => ({
+export const projectToUserRelation = relations(project, ({ one }) => ({
   user: one(user, {
     fields: [project.userId],
     references: [user.id],
+  }),
+}));
+
+export const projectToCommitRelation = relations(project, ({ many }) => ({
+  commits: many(commit),
+}));
+
+export const commitToProjectRelation = relations(commit, ({ one }) => ({
+  project: one(project, {
+    fields: [commit.projectId],
+    references: [project.id],
   }),
 }));
 
@@ -70,4 +93,5 @@ export const schema = {
   session,
   account,
   project,
+  commit,
 };

@@ -5,3 +5,5 @@ export const DATABASE_AUTH_TOKEN = process.env
 
 export const AUTH_SECRET = process.env.BETTER_AUTH_SECRET as string;
 export const BASE_URL = process.env.BETTER_AUTH_URL as string;
+
+export const GITHUB_TOKEN = process.env.GITHUB_TOKEN as string;
